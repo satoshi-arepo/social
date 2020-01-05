@@ -1,8 +1,9 @@
 const app = angular.module("app", []);
-app.controller("PostsCtrl", function ($scope, $http) {
+
+app.controller("PostsCtrl", function ($scope, PostsSvc) {
 	$scope.addPost = () => {
 		if ($scope.postBody) {
-			$http.post("http://localhost:3000/api/posts", {
+			PostsSvc.create({
 				username: "max",
 				body: $scope.postBody
 			}).success(post => {
@@ -15,6 +16,10 @@ app.controller("PostsCtrl", function ($scope, $http) {
 		}
 	}
 
-	$http.get("http://localhost:3000/api/posts")
-			 .success(posts => $scope.posts = posts);
+	PostsSvc.fetch().success(posts => $scope.posts = posts);
+});
+
+app.service("PostsSvc", function ($http) {
+	this.fetch = () => $http.get("/api/posts");
+	this.create = (p) => $http.post("/api/posts", p);
 });
