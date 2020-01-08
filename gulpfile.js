@@ -1,8 +1,9 @@
-const {src, dest, series, watch} = require("gulp");
+const {src, dest, series, parallel, watch} = require("gulp");
 const concat = require("gulp-concat");
 const sourcemaps = require("gulp-sourcemaps");
 const uglify = require("gulp-terser");
 const ngAnnotate = require("gulp-ng-annotate");
+const nodemon = require("gulp-nodemon");
 
 function js (cb) {
 	src(["ng/module.js", "ng/**/*.js"])
@@ -12,10 +13,28 @@ function js (cb) {
 			.pipe(uglify())
 		.pipe(sourcemaps.write())
 		.pipe(dest("assets"))
-	cb();
+}
+
+function server () {
+	nodemon({
+		script: "server.js",
+		ext:	"js",
+		ignore: ["ng*", "gulp*", "assets*"]
+	});
 }
 
 exports.js = js
-exports.default = function() {
+
+function watchjs () {
 	watch("ng/**/*.js", js);
 }
+
+exports.watchjs = watchjs
+exports.server = server 
+
+exports.default = function(cb) {
+	watchjs();
+	server();
+	cb();
+}
+//comment
