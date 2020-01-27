@@ -13,7 +13,7 @@ router.get("/", (rq, rs, next) => {
 
 router.post("/", (rq, rs, next) => {
 	const post = new Post({
-		username: rq.body.username,
+		username: rq.auth.username,
 		body: rq.body.body
 	});
 	post.save((e, post) => {

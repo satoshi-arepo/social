@@ -13,6 +13,7 @@ function js (cb) {
 			.pipe(uglify())
 		.pipe(sourcemaps.write())
 		.pipe(dest("assets"))
+	cb();
 }
 
 function server () {
@@ -37,4 +38,3 @@ exports.default = function(cb) {
 	server();
 	cb();
 }
-//comment
